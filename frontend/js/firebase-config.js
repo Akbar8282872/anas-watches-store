@@ -9,12 +9,13 @@ import { getFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase
 // Copy the configuration object they give you and paste it below:
 
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyD1UHj3tRfjpknCW5LyxzVpBMuORjQw8Yo",
+  authDomain: "anas-watches.firebaseapp.com",
+  projectId: "anas-watches",
+  storageBucket: "anas-watches.firebasestorage.app",
+  messagingSenderId: "969091370398",
+  appId: "1:969091370398:web:9963897ef56c5f76eb1a8f",
+  measurementId: "G-7L6G6JWPVH"
 };
 
 const app = initializeApp(firebaseConfig);

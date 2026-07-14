@@ -138,73 +138,76 @@
         </main>
     </div>
 
-    <script>
-        function switchTab(tab) {
+    <script type="module">
+        import { db } from '../js/firebase-config.js';
+        import { collection, onSnapshot, addDoc, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // Tab Switching logic
+        window.switchTab = function(tab) {
             document.querySelectorAll('.dashboard-card').forEach(c => c.style.display = 'none');
             document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active'));
             document.getElementById(`view-${tab}`).style.display = 'block';
             document.getElementById(`tab-${tab}`).classList.add('active');
-            
-            if(tab === 'orders') loadOrders();
-            if(tab === 'products') loadProducts();
         }
 
-        function toggleImageInput() {
+        window.toggleImageInput = function() {
             const type = document.getElementById('imageType').value;
             document.getElementById('urlInputGroup').style.display = type === 'url' ? 'block' : 'none';
             document.getElementById('fileInputGroup').style.display = type === 'file' ? 'block' : 'none';
         }
 
-        // LOAD ORDERS
-        function loadOrders() {
-            const orders = JSON.parse(localStorage.getItem('orders')) || [];
+        // FIREBASE: Real-time orders
+        onSnapshot(collection(db, "orders"), (snapshot) => {
             const tbody = document.getElementById('ordersBody');
-            if(orders.length === 0) return tbody.innerHTML = '<tr><td colspan="7">No active orders.</td></tr>';
+            if(snapshot.empty) return tbody.innerHTML = '<tr><td colspan="7">No active orders.</td></tr>';
             
-            tbody.innerHTML = orders.map((o, index) => `
-                <tr>
-                    <td>${o.orderId}</td><td>${o.name}</td><td>${o.address}</td>
-                    <td>${o.method} ${o.trxId ? '<br><small>Ref: '+o.trxId+'</small>' : ''}</td>
-                    <td>Rs. ${o.total.toLocaleString()}</td>
-                    <td style="color: ${o.status === 'Verified' ? '#2ecc71' : '#e74c3c'}">${o.status}</td>
-                    <td>${o.status !== 'Verified' ? `<button class="btn-action" onclick="verifyOrder(${index})">Verify Payment</button>` : 'Shipping...'}</td>
-                </tr>
-            `).join('');
+            let html = '';
+            snapshot.forEach(docSnap => {
+                const o = docSnap.data();
+                html += `
+                    <tr>
+                        <td>${o.orderId}</td><td>${o.name}</td><td>${o.address}</td>
+                        <td>${o.method} ${o.trxId ? '<br><small>Ref: '+o.trxId+'</small>' : ''}</td>
+                        <td>Rs. ${o.total.toLocaleString()}</td>
+                        <td style="color: ${o.status === 'Verified' ? '#2ecc71' : '#e74c3c'}">${o.status}</td>
+                        <td>${o.status !== 'Verified' ? `<button class="btn-action" onclick="verifyOrder('${docSnap.id}')">Verify Payment</button>` : 'Shipping...'}</td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = html;
+        });
+
+        window.verifyOrder = async function(docId) {
+            await updateDoc(doc(db, "orders", docId), { status: 'Verified' });
         }
 
-        function verifyOrder(index) {
-            let orders = JSON.parse(localStorage.getItem('orders')) || [];
-            orders[index].status = 'Verified';
-            localStorage.setItem('orders', JSON.stringify(orders));
-            loadOrders();
-        }
-
-        // LOAD PRODUCTS (for deletion)
-        function loadProducts() {
-            const products = JSON.parse(localStorage.getItem('adminProducts')) || [];
+        // FIREBASE: Real-time products
+        onSnapshot(collection(db, "adminProducts"), (snapshot) => {
             const tbody = document.getElementById('productsBody');
-            if(products.length === 0) return tbody.innerHTML = '<tr><td colspan="4">No custom products added yet.</td></tr>';
+            if(snapshot.empty) return tbody.innerHTML = '<tr><td colspan="4">No custom products added yet.</td></tr>';
             
-            tbody.innerHTML = products.map((p, index) => `
-                <tr>
-                    <td><img src="${p.image}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;"></td>
-                    <td>${p.name}</td>
-                    <td>Rs. ${p.price.toLocaleString()}</td>
-                    <td><button class="btn-danger" onclick="deleteProduct(${index})">Delete</button></td>
-                </tr>
-            `).join('');
-        }
+            let html = '';
+            snapshot.forEach(docSnap => {
+                const p = docSnap.data();
+                html += `
+                    <tr>
+                        <td><img src="${p.image}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;"></td>
+                        <td>${p.name}</td>
+                        <td>Rs. ${p.price.toLocaleString()}</td>
+                        <td><button class="btn-danger" onclick="deleteProduct('${docSnap.id}')">Delete</button></td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = html;
+        });
 
-        function deleteProduct(index) {
+        window.deleteProduct = async function(docId) {
             if(!confirm('Are you sure you want to remove this product from the store?')) return;
-            let products = JSON.parse(localStorage.getItem('adminProducts')) || [];
-            products.splice(index, 1);
-            localStorage.setItem('adminProducts', JSON.stringify(products));
-            loadProducts();
+            await deleteDoc(doc(db, "adminProducts", docId));
             alert('Product removed!');
         }
 
-        // ADD PRODUCT (with FileReader)
+        // FIREBASE: Add Product
         document.getElementById('addProductForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const brand = document.getElementById('pBrand').value;
@@ -220,31 +223,25 @@
                 
                 const reader = new FileReader();
                 reader.onload = function(event) {
-                    // Base64 string of the uploaded image
                     saveProduct(brand, model, price, event.target.result);
                 };
                 reader.readAsDataURL(fileInput.files[0]);
             }
         });
         
-        function saveProduct(brand, model, price, imageSrc) {
+        async function saveProduct(brand, model, price, imageSrc) {
             const newProduct = {
-                id: Date.now(),
                 name: `${brand} ${model}`,
                 price: price,
                 rating: "5.0",
                 image: imageSrc
             };
-            let customProducts = JSON.parse(localStorage.getItem('adminProducts')) || [];
-            customProducts.push(newProduct);
-            localStorage.setItem('adminProducts', JSON.stringify(customProducts));
+            await addDoc(collection(db, "adminProducts"), newProduct);
             
-            alert('Product added successfully!');
+            alert('Product added securely to cloud database!');
             document.getElementById('addProductForm').reset();
-            switchTab('products'); // go view the new product
+            switchTab('products');
         }
-
-        document.addEventListener('DOMContentLoaded', loadOrders);
     </script>
 </body>
 </html>

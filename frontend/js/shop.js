@@ -41,6 +41,9 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+import { db } from './firebase-config.js';
+import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
 // Generate the 32 specific watches
 let products = distinctWatches.map((w, i) => {
     return {
@@ -52,11 +55,19 @@ let products = distinctWatches.map((w, i) => {
     };
 });
 
-// If the admin has added new products, load them from localStorage and prepend them
-const customProducts = JSON.parse(localStorage.getItem('adminProducts')) || [];
-products = [...customProducts, ...products];
+async function renderProducts() {
+    // If the admin has added new products, load them from Firebase and prepend them
+    try {
+        const querySnapshot = await getDocs(collection(db, "adminProducts"));
+        let customProducts = [];
+        querySnapshot.forEach((doc) => {
+            customProducts.push(doc.data());
+        });
+        products = [...customProducts, ...products];
+    } catch(e) {
+        console.warn("Firebase not connected. Showing default items only.", e);
+    }
 
-function renderProducts() {
     const grid = document.getElementById("productGrid");
     if (!grid) return;
     
@@ -84,9 +95,9 @@ function renderProducts() {
     grid.innerHTML = html;
 }
 
-function addToCart(productId) {
+window.addToCart = function(productId) {
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
-    const product = products.find(p => p.id === productId);
+    const product = products.find(p => p.id === productId || p.name === productId);
     if (product) {
         cart.push(product);
         localStorage.setItem("cart", JSON.stringify(cart));

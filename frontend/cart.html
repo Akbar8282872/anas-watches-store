@@ -247,8 +247,23 @@
         </div>
     </div>
 
-    <script>
-        function loadCart() {
+    <script type="module">
+        import { db } from './js/firebase-config.js';
+        import { collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        window.togglePaymentDetails = function() {
+            const method = document.getElementById("paymentMethod").value;
+            const details = document.getElementById("easypaisaDetails");
+            if(method === "Easypaisa" || method === "Jazzcash") {
+                details.style.display = "block";
+                document.getElementById("trxId").required = true;
+            } else {
+                details.style.display = "none";
+                document.getElementById("trxId").required = false;
+            }
+        }
+        
+        window.loadCart = function() {
             let cart = JSON.parse(localStorage.getItem("cart")) || [];
             const container = document.getElementById("cartItemsContainer");
             const subtotalEl = document.getElementById("subtotal");
@@ -283,36 +298,24 @@
             totalEl.innerText = `Rs. ${total.toLocaleString()}`;
         }
         
-        function removeItem(index) {
+        window.removeItem = function(index) {
             let cart = JSON.parse(localStorage.getItem("cart")) || [];
             cart.splice(index, 1);
             localStorage.setItem("cart", JSON.stringify(cart));
             loadCart();
         }
         
-        function openCheckout() {
+        window.openCheckout = function() {
             let cart = JSON.parse(localStorage.getItem("cart")) || [];
             if(cart.length === 0) return alert("Cart is empty!");
             document.getElementById('checkoutModal').style.display = 'flex';
         }
         
-        function closeCheckout() {
+        window.closeCheckout = function() {
             document.getElementById('checkoutModal').style.display = 'none';
         }
         
-        function togglePaymentInfo() {
-            const method = document.getElementById("paymentMethod").value;
-            const info = document.getElementById("paymentInfo");
-            if(method === "Easypaisa" || method === "Jazzcash") {
-                info.style.display = "block";
-                document.getElementById("trxId").required = true;
-            } else {
-                info.style.display = "none";
-                document.getElementById("trxId").required = false;
-            }
-        }
-        
-        function submitOrder(e) {
+        document.getElementById("checkoutForm").addEventListener("submit", async function(e) {
             e.preventDefault();
             
             let cart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -332,18 +335,21 @@
                 trxId: trxId,
                 total: total,
                 status: 'Pending Verification',
-                items: cart
+                items: cart,
+                timestamp: new Date().toISOString()
             };
             
-            let orders = JSON.parse(localStorage.getItem('orders')) || [];
-            orders.push(newOrder);
-            localStorage.setItem('orders', JSON.stringify(orders));
-            
-            alert("Order placed successfully! The admin will verify your order shortly.");
-            localStorage.removeItem("cart");
-            closeCheckout();
-            loadCart();
-        }
+            try {
+                await addDoc(collection(db, "orders"), newOrder);
+                alert("Order securely transmitted! The admin will verify your order shortly.");
+                localStorage.removeItem("cart");
+                closeCheckout();
+                loadCart();
+            } catch(error) {
+                console.error("Error writing document: ", error);
+                alert("Database disconnected. Add Firebase config in js/firebase-config.js to enable live orders.");
+            }
+        });
 
         document.addEventListener("DOMContentLoaded", loadCart);
     </script>

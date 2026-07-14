@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop | Anas Watches Store</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/global.css">
+    <style>
+        .shop-header {
+            padding: 150px 5% 50px;
+            text-align: center;
+        }
+        .shop-header h1 {
+            font-family: var(--font-heading);
+            font-size: 3rem;
+            color: var(--color-gold);
+            margin-bottom: 10px;
+        }
+        
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            padding: 0 5% 5rem;
+        }
+        
+        .product-card {
+            background-color: var(--color-bg-secondary);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.1);
+        }
+        
+        .product-img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-bottom: 2px solid var(--color-gold);
+        }
+        
+        .product-info {
+            padding: 1.5rem;
+        }
+        
+        .product-title {
+            font-family: var(--font-heading);
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .product-price {
+            color: var(--color-gold);
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .product-rating {
+            color: #f1c40f;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        
+        .add-to-cart-btn {
+            width: 100%;
+            background-color: transparent;
+            color: var(--color-gold);
+            border: 1px solid var(--color-gold);
+            padding: 0.8rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .add-to-cart-btn:hover {
+            background-color: var(--color-gold);
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar" style="background-color: var(--color-bg-primary); padding-bottom: 1rem;">
+        <div class="logo">ANAS <span>WATCHES</span></div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shop.html" style="color: var(--color-gold);">Shop</a></li>
+                <li><a href="cart.html"><i class="fa-solid fa-cart-shopping"></i> Cart</a></li>
+                <li><a href="admin/dashboard.html"><i class="fa-solid fa-user"></i> Admin</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="shop-header">
+        <h1>Luxury Collection</h1>
+        <p>Explore our curated selection of 30+ high-end pre-owned watches.</p>
+    </section>
+
+    <section class="product-grid" id="productGrid">
+        <!-- Products will be dynamically injected here via JS -->
+    </section>
+
+    <script src="js/shop.js"></script>
+</body>
+</html>

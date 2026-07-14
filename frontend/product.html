@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details | Anas Watches</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/global.css">
+    <style>
+        .product-section {
+            padding: 150px 5% 5rem;
+            display: flex;
+            gap: 4rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .product-image {
+            flex: 1;
+        }
+        
+        .product-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 2px solid var(--color-gold);
+        }
+        
+        .product-details {
+            flex: 1;
+        }
+        
+        .product-brand {
+            color: var(--color-gold);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        
+        .product-title {
+            font-family: var(--font-heading);
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+        
+        .product-price {
+            font-size: 2rem;
+            color: var(--color-gold);
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+        
+        .product-desc {
+            color: var(--color-text-muted);
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+        
+        .add-to-cart-btn {
+            background-color: var(--color-gold);
+            color: #000;
+            border: none;
+            padding: 1rem 3rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 4px;
+        }
+        
+        .add-to-cart-btn:hover {
+            background-color: var(--color-gold-hover);
+            transform: translateY(-2px);
+        }
+        
+        @media (max-width: 900px) {
+            .product-section {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar" style="background-color: var(--color-bg-primary); padding-bottom: 1rem;">
+        <div class="logo">ANAS <span>WATCHES</span></div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shop.html">Shop</a></li>
+                <li><a href="cart.html"><i class="fa-solid fa-cart-shopping"></i> Cart</a></li>
+                <li><a href="admin/dashboard.html"><i class="fa-solid fa-user"></i> Admin</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="product-section">
+        <div class="product-image">
+            <img src="assets/200.jpg" alt="Luxury Watch">
+        </div>
+        <div class="product-details">
+            <div class="product-brand">Authentic Pre-Owned</div>
+            <h1 class="product-title">Hublot Classic Fusion - Ref 824</h1>
+            <div class="product-price">Rs. 8,500</div>
+            <div style="color: #f1c40f; margin-bottom: 1rem;">
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star-half-stroke"></i>
+                <span style="color: #fff; margin-left: 0.5rem;">(4.8/5 Based on 12 reviews)</span>
+            </div>
+            <p class="product-desc">
+                Experience the pinnacle of luxury with this pre-owned Hublot Classic Fusion. Meticulously inspected and certified authentic, this timepiece features a striking black dial, gold accents, and a premium leather strap. A perfect statement piece for the modern professional.
+            </p>
+            <button class="add-to-cart-btn" onclick="addToCartSingle()">Add to Cart <i class="fa-solid fa-cart-arrow-down" style="margin-left: 0.5rem;"></i></button>
+        </div>
+    </section>
+
+    <script>
+        function addToCartSingle() {
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+            cart.push({
+                id: 999,
+                name: "Hublot Classic Fusion - Ref 824",
+                price: 8500,
+                image: "assets/200.jpg"
+            });
+            localStorage.setItem("cart", JSON.stringify(cart));
+            alert("Hublot Classic Fusion added to cart!");
+        }
+    </script>
+</body>
+</html>

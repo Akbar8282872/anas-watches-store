@@ -12,77 +12,40 @@
         if(localStorage.getItem('adminLoggedIn') !== 'true') {
             window.location.href = 'login.html';
         }
-        
         function logout() {
             localStorage.removeItem('adminLoggedIn');
             window.location.href = 'login.html';
         }
     </script>
     <style>
-        .admin-layout {
-            display: flex;
-            min-height: 100vh;
-            padding-top: 80px;
-        }
-        
-        .sidebar {
-            width: 250px;
-            background-color: #111;
-            padding: 2rem;
-            border-right: 1px solid #333;
-        }
-        
+        .admin-layout { display: flex; min-height: 100vh; padding-top: 80px; }
+        .sidebar { width: 250px; background-color: #111; padding: 2rem; border-right: 1px solid #333; }
         .sidebar ul { list-style: none; }
         .sidebar li { margin-bottom: 1.5rem; }
-        .sidebar a {
-            color: var(--color-text-muted);
-            text-decoration: none;
-            font-size: 1.1rem;
-            transition: color 0.3s;
-            cursor: pointer;
-        }
+        .sidebar a { color: var(--color-text-muted); text-decoration: none; font-size: 1.1rem; cursor: pointer; }
         .sidebar a:hover, .sidebar a.active { color: var(--color-gold); }
+        .main-content { flex: 1; padding: 3rem 5%; }
         
-        .main-content {
-            flex: 1;
-            padding: 3rem 5%;
-        }
-        
-        .orders-table {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: #1a1a1a;
-            border-radius: 8px;
-            overflow: hidden;
-            margin-bottom: 3rem;
-        }
-        .orders-table th, .orders-table td {
-            padding: 1rem;
-            text-align: left;
-            border-bottom: 1px solid #333;
-        }
-        .orders-table th { color: var(--color-gold); font-weight: 600; }
-        
-        .btn-verify {
-            background-color: var(--color-gold);
-            color: #000;
-            border: none;
-            padding: 0.5rem 1rem;
-            cursor: pointer;
-            border-radius: 4px;
-            font-weight: 600;
-        }
-        
-        .add-product-form {
+        .dashboard-card {
             background-color: #1a1a1a;
             padding: 2rem;
             border-radius: 8px;
             border: 1px solid #333;
-            max-width: 600px;
+            margin-bottom: 3rem;
         }
-        .form-group { margin-bottom: 1rem; }
+        
+        .orders-table { width: 100%; border-collapse: collapse; }
+        .orders-table th, .orders-table td { padding: 1rem; text-align: left; border-bottom: 1px solid #333; }
+        .orders-table th { color: var(--color-gold); font-weight: 600; }
+        
+        .btn-action { background-color: var(--color-gold); color: #000; border: none; padding: 0.5rem 1rem; cursor: pointer; border-radius: 4px; font-weight: 600; }
+        .btn-danger { background-color: #e74c3c; color: #fff; border: none; padding: 0.5rem 1rem; cursor: pointer; border-radius: 4px; font-weight: 600; }
+        
+        .form-group { margin-bottom: 1.5rem; }
         .form-group label { display: block; margin-bottom: 0.5rem; color: var(--color-gold); }
-        .form-group input { width: 100%; padding: 0.8rem; background: #000; border: 1px solid #333; color: #fff; }
+        .form-group input, .form-group select { width: 100%; padding: 0.8rem; background: #000; border: 1px solid #333; color: #fff; border-radius: 4px;}
+        .form-row { display: flex; gap: 1rem; }
+        .form-row .form-group { flex: 1; }
     </style>
 </head>
 <body>
@@ -99,83 +62,114 @@
     <div class="admin-layout">
         <aside class="sidebar">
             <ul>
-                <li><a class="active">Dashboard</a></li>
+                <li><a onclick="switchTab('orders')" id="tab-orders" class="active">Real-Time Orders</a></li>
+                <li><a onclick="switchTab('products')" id="tab-products">Manage Products</a></li>
+                <li><a onclick="switchTab('add')" id="tab-add">Add Product</a></li>
             </ul>
         </aside>
         
         <main class="main-content">
-            <h1 style="font-family: var(--font-heading); color: var(--color-gold); margin-bottom: 2rem;">Real-Time Orders</h1>
-            
-            <table class="orders-table">
-                <thead>
-                    <tr>
-                        <th>Order ID</th>
-                        <th>Customer</th>
-                        <th>Address</th>
-                        <th>Method</th>
-                        <th>Total Amount</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody id="ordersBody">
-                    <!-- Loaded dynamically -->
-                </tbody>
-            </table>
-            
-            <h2 style="font-family: var(--font-heading); color: var(--color-gold); margin-bottom: 1.5rem;">Add New Product to Store</h2>
-            <div class="add-product-form">
+            <!-- ORDERS VIEW -->
+            <div id="view-orders" class="dashboard-card">
+                <h2 style="color: var(--color-gold); margin-bottom: 1.5rem;">Recent Orders</h2>
+                <table class="orders-table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th><th>Customer</th><th>Address</th><th>Method</th><th>Total</th><th>Status</th><th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersBody"></tbody>
+                </table>
+            </div>
+
+            <!-- MANAGE PRODUCTS VIEW -->
+            <div id="view-products" class="dashboard-card" style="display: none;">
+                <h2 style="color: var(--color-gold); margin-bottom: 1.5rem;">Manage Added Products</h2>
+                <table class="orders-table">
+                    <thead>
+                        <tr>
+                            <th>Image</th><th>Name</th><th>Price</th><th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productsBody"></tbody>
+                </table>
+            </div>
+
+            <!-- ADD PRODUCT VIEW -->
+            <div id="view-add" class="dashboard-card" style="display: none; max-width: 600px;">
+                <h2 style="color: var(--color-gold); margin-bottom: 1.5rem;">Add New Product</h2>
                 <form id="addProductForm">
-                    <div class="form-group">
-                        <label>Watch Brand (e.g. Rolex)</label>
-                        <input type="text" id="pBrand" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Watch Model/Color</label>
-                        <input type="text" id="pModel" required>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Watch Brand (e.g. Rolex)</label>
+                            <input type="text" id="pBrand" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Watch Model/Color</label>
+                            <input type="text" id="pModel" required>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label>Price (PKR)</label>
                         <input type="number" id="pPrice" required>
                     </div>
+                    
                     <div class="form-group">
-                        <label>Image URL</label>
-                        <input type="text" id="pImage" required placeholder="https://...">
+                        <label>Image Source Type</label>
+                        <select id="imageType" onchange="toggleImageInput()">
+                            <option value="url">Paste Image URL</option>
+                            <option value="file">Upload from Gallery</option>
+                        </select>
                     </div>
-                    <button type="submit" class="btn-verify" style="margin-top: 1rem; width: 100%;">Upload Product</button>
+                    
+                    <div class="form-group" id="urlInputGroup">
+                        <label>Image URL</label>
+                        <input type="url" id="pImage" placeholder="https://...">
+                    </div>
+                    
+                    <div class="form-group" id="fileInputGroup" style="display: none;">
+                        <label>Upload Image (Gallery)</label>
+                        <input type="file" id="pFile" accept="image/*">
+                    </div>
+                    
+                    <button type="submit" class="btn-action" style="width: 100%; padding: 1rem; margin-top: 1rem;">Publish to Store</button>
                 </form>
             </div>
         </main>
     </div>
 
     <script>
-        // Load real orders from localStorage
+        function switchTab(tab) {
+            document.querySelectorAll('.dashboard-card').forEach(c => c.style.display = 'none');
+            document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active'));
+            document.getElementById(`view-${tab}`).style.display = 'block';
+            document.getElementById(`tab-${tab}`).classList.add('active');
+            
+            if(tab === 'orders') loadOrders();
+            if(tab === 'products') loadProducts();
+        }
+
+        function toggleImageInput() {
+            const type = document.getElementById('imageType').value;
+            document.getElementById('urlInputGroup').style.display = type === 'url' ? 'block' : 'none';
+            document.getElementById('fileInputGroup').style.display = type === 'file' ? 'block' : 'none';
+        }
+
+        // LOAD ORDERS
         function loadOrders() {
             const orders = JSON.parse(localStorage.getItem('orders')) || [];
             const tbody = document.getElementById('ordersBody');
+            if(orders.length === 0) return tbody.innerHTML = '<tr><td colspan="7">No active orders.</td></tr>';
             
-            if(orders.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">No active orders found.</td></tr>';
-                return;
-            }
-            
-            let html = '';
-            orders.forEach((o, index) => {
-                html += `
-                    <tr>
-                        <td>${o.orderId}</td>
-                        <td>${o.name}</td>
-                        <td>${o.address}</td>
-                        <td>${o.method} ${o.trxId ? '<br><small>Ref: '+o.trxId+'</small>' : ''}</td>
-                        <td>Rs. ${o.total.toLocaleString()}</td>
-                        <td style="color: ${o.status === 'Verified' ? '#2ecc71' : '#e74c3c'}">${o.status}</td>
-                        <td>
-                            ${o.status !== 'Verified' ? `<button class="btn-verify" onclick="verifyOrder(${index})">Verify Payment</button>` : 'Shipping...'}
-                        </td>
-                    </tr>
-                `;
-            });
-            tbody.innerHTML = html;
+            tbody.innerHTML = orders.map((o, index) => `
+                <tr>
+                    <td>${o.orderId}</td><td>${o.name}</td><td>${o.address}</td>
+                    <td>${o.method} ${o.trxId ? '<br><small>Ref: '+o.trxId+'</small>' : ''}</td>
+                    <td>Rs. ${o.total.toLocaleString()}</td>
+                    <td style="color: ${o.status === 'Verified' ? '#2ecc71' : '#e74c3c'}">${o.status}</td>
+                    <td>${o.status !== 'Verified' ? `<button class="btn-action" onclick="verifyOrder(${index})">Verify Payment</button>` : 'Shipping...'}</td>
+                </tr>
+            `).join('');
         }
 
         function verifyOrder(index) {
@@ -185,29 +179,70 @@
             loadOrders();
         }
 
-        // Add Product Form Logic
+        // LOAD PRODUCTS (for deletion)
+        function loadProducts() {
+            const products = JSON.parse(localStorage.getItem('adminProducts')) || [];
+            const tbody = document.getElementById('productsBody');
+            if(products.length === 0) return tbody.innerHTML = '<tr><td colspan="4">No custom products added yet.</td></tr>';
+            
+            tbody.innerHTML = products.map((p, index) => `
+                <tr>
+                    <td><img src="${p.image}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;"></td>
+                    <td>${p.name}</td>
+                    <td>Rs. ${p.price.toLocaleString()}</td>
+                    <td><button class="btn-danger" onclick="deleteProduct(${index})">Delete</button></td>
+                </tr>
+            `).join('');
+        }
+
+        function deleteProduct(index) {
+            if(!confirm('Are you sure you want to remove this product from the store?')) return;
+            let products = JSON.parse(localStorage.getItem('adminProducts')) || [];
+            products.splice(index, 1);
+            localStorage.setItem('adminProducts', JSON.stringify(products));
+            loadProducts();
+            alert('Product removed!');
+        }
+
+        // ADD PRODUCT (with FileReader)
         document.getElementById('addProductForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const brand = document.getElementById('pBrand').value;
             const model = document.getElementById('pModel').value;
             const price = parseInt(document.getElementById('pPrice').value);
-            const image = document.getElementById('pImage').value;
+            const imageType = document.getElementById('imageType').value;
             
+            if (imageType === 'url') {
+                saveProduct(brand, model, price, document.getElementById('pImage').value || 'assets/200.jpg');
+            } else {
+                const fileInput = document.getElementById('pFile');
+                if (!fileInput.files[0]) return alert("Please select an image from your gallery.");
+                
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    // Base64 string of the uploaded image
+                    saveProduct(brand, model, price, event.target.result);
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            }
+        });
+        
+        function saveProduct(brand, model, price, imageSrc) {
             const newProduct = {
                 id: Date.now(),
                 name: `${brand} ${model}`,
                 price: price,
                 rating: "5.0",
-                image: image
+                image: imageSrc
             };
-            
             let customProducts = JSON.parse(localStorage.getItem('adminProducts')) || [];
             customProducts.push(newProduct);
             localStorage.setItem('adminProducts', JSON.stringify(customProducts));
             
-            alert('Product added successfully! It will now appear first in the Shop.');
-            this.reset();
-        });
+            alert('Product added successfully!');
+            document.getElementById('addProductForm').reset();
+            switchTab('products'); // go view the new product
+        }
 
         document.addEventListener('DOMContentLoaded', loadOrders);
     </script>

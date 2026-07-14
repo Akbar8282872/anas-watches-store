@@ -314,6 +314,31 @@
         
         function submitOrder(e) {
             e.preventDefault();
+            
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+            if(cart.length === 0) return alert("Cart is empty!");
+            
+            let total = cart.reduce((sum, item) => sum + item.price, 0);
+            const name = e.target.querySelector('input[type="text"]').value;
+            const address = e.target.querySelectorAll('input[type="text"]')[1].value;
+            const method = document.getElementById("paymentMethod").value;
+            const trxId = document.getElementById("trxId").value;
+            
+            const newOrder = {
+                orderId: 'ORD-' + Math.floor(Math.random() * 90000 + 10000),
+                name: name,
+                address: address,
+                method: method,
+                trxId: trxId,
+                total: total,
+                status: 'Pending Verification',
+                items: cart
+            };
+            
+            let orders = JSON.parse(localStorage.getItem('orders')) || [];
+            orders.push(newOrder);
+            localStorage.setItem('orders', JSON.stringify(orders));
+            
             alert("Order placed successfully! The admin will verify your order shortly.");
             localStorage.removeItem("cart");
             closeCheckout();

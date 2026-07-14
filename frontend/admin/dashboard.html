@@ -7,11 +7,22 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../css/global.css">
+    <script>
+        // Security Check
+        if(localStorage.getItem('adminLoggedIn') !== 'true') {
+            window.location.href = 'login.html';
+        }
+        
+        function logout() {
+            localStorage.removeItem('adminLoggedIn');
+            window.location.href = 'login.html';
+        }
+    </script>
     <style>
         .admin-layout {
             display: flex;
             min-height: 100vh;
-            padding-top: 80px; /* offset navbar */
+            padding-top: 80px;
         }
         
         .sidebar {
@@ -21,55 +32,20 @@
             border-right: 1px solid #333;
         }
         
-        .sidebar ul {
-            list-style: none;
-        }
-        
-        .sidebar li {
-            margin-bottom: 1.5rem;
-        }
-        
+        .sidebar ul { list-style: none; }
+        .sidebar li { margin-bottom: 1.5rem; }
         .sidebar a {
             color: var(--color-text-muted);
             text-decoration: none;
             font-size: 1.1rem;
             transition: color 0.3s;
+            cursor: pointer;
         }
-        
-        .sidebar a:hover, .sidebar a.active {
-            color: var(--color-gold);
-        }
+        .sidebar a:hover, .sidebar a.active { color: var(--color-gold); }
         
         .main-content {
             flex: 1;
             padding: 3rem 5%;
-        }
-        
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
-        
-        .stat-card {
-            background-color: #1a1a1a;
-            padding: 2rem;
-            border-radius: 8px;
-            text-align: center;
-            border-bottom: 3px solid var(--color-gold);
-        }
-        
-        .stat-card h3 {
-            font-size: 1.2rem;
-            color: var(--color-text-muted);
-            margin-bottom: 1rem;
-        }
-        
-        .stat-card .value {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--color-text-light);
         }
         
         .orders-table {
@@ -78,18 +54,14 @@
             background-color: #1a1a1a;
             border-radius: 8px;
             overflow: hidden;
+            margin-bottom: 3rem;
         }
-        
         .orders-table th, .orders-table td {
             padding: 1rem;
             text-align: left;
             border-bottom: 1px solid #333;
         }
-        
-        .orders-table th {
-            color: var(--color-gold);
-            font-weight: 600;
-        }
+        .orders-table th { color: var(--color-gold); font-weight: 600; }
         
         .btn-verify {
             background-color: var(--color-gold);
@@ -101,9 +73,16 @@
             font-weight: 600;
         }
         
-        .btn-verify:hover {
-            background-color: var(--color-gold-hover);
+        .add-product-form {
+            background-color: #1a1a1a;
+            padding: 2rem;
+            border-radius: 8px;
+            border: 1px solid #333;
+            max-width: 600px;
         }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; color: var(--color-gold); }
+        .form-group input { width: 100%; padding: 0.8rem; background: #000; border: 1px solid #333; color: #fff; }
     </style>
 </head>
 <body>
@@ -112,7 +91,7 @@
         <nav>
             <ul>
                 <li><a href="../index.html">Back to Store</a></li>
-                <li><a href="#" style="color: var(--color-gold);">Logout</a></li>
+                <li><a onclick="logout()" style="color: var(--color-gold); cursor: pointer;">Logout</a></li>
             </ul>
         </nav>
     </header>
@@ -120,64 +99,117 @@
     <div class="admin-layout">
         <aside class="sidebar">
             <ul>
-                <li><a href="#" class="active"><i class="fa-solid fa-chart-line"></i> Dashboard</a></li>
-                <li><a href="#"><i class="fa-solid fa-box"></i> Products</a></li>
-                <li><a href="#"><i class="fa-solid fa-cart-shopping"></i> Orders</a></li>
-                <li><a href="#"><i class="fa-solid fa-users"></i> Customers</a></li>
-                <li><a href="#"><i class="fa-solid fa-gear"></i> Settings</a></li>
+                <li><a class="active">Dashboard</a></li>
             </ul>
         </aside>
         
         <main class="main-content">
-            <h1 style="font-family: var(--font-heading); color: var(--color-gold); margin-bottom: 2rem;">Overview</h1>
+            <h1 style="font-family: var(--font-heading); color: var(--color-gold); margin-bottom: 2rem;">Real-Time Orders</h1>
             
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <h3>Total Sales</h3>
-                    <div class="value">Rs. 154,000</div>
-                </div>
-                <div class="stat-card">
-                    <h3>Active Orders</h3>
-                    <div class="value">12</div>
-                </div>
-                <div class="stat-card">
-                    <h3>Pending Payments</h3>
-                    <div class="value">3</div>
-                </div>
-            </div>
-            
-            <h2 style="margin-bottom: 1rem;">Recent Orders (Manual Verification)</h2>
             <table class="orders-table">
                 <thead>
                     <tr>
                         <th>Order ID</th>
                         <th>Customer</th>
+                        <th>Address</th>
                         <th>Method</th>
-                        <th>Amount</th>
+                        <th>Total Amount</th>
                         <th>Status</th>
                         <th>Action</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>#ORD-001</td>
-                        <td>Ali Khan</td>
-                        <td>Easypaisa (Ref: 19283746)</td>
-                        <td>Rs. 8,500</td>
-                        <td style="color: #e74c3c;">Pending Verification</td>
-                        <td><button class="btn-verify">Verify & Ship</button></td>
-                    </tr>
-                    <tr>
-                        <td>#ORD-002</td>
-                        <td>Ahmed Raza</td>
-                        <td>COD</td>
-                        <td>Rs. 11,000</td>
-                        <td style="color: #f1c40f;">Processing</td>
-                        <td><button class="btn-verify" style="background-color: transparent; border: 1px solid var(--color-gold); color: var(--color-gold);">Update Status</button></td>
-                    </tr>
+                <tbody id="ordersBody">
+                    <!-- Loaded dynamically -->
                 </tbody>
             </table>
+            
+            <h2 style="font-family: var(--font-heading); color: var(--color-gold); margin-bottom: 1.5rem;">Add New Product to Store</h2>
+            <div class="add-product-form">
+                <form id="addProductForm">
+                    <div class="form-group">
+                        <label>Watch Brand (e.g. Rolex)</label>
+                        <input type="text" id="pBrand" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Watch Model/Color</label>
+                        <input type="text" id="pModel" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Price (PKR)</label>
+                        <input type="number" id="pPrice" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Image URL</label>
+                        <input type="text" id="pImage" required placeholder="https://...">
+                    </div>
+                    <button type="submit" class="btn-verify" style="margin-top: 1rem; width: 100%;">Upload Product</button>
+                </form>
+            </div>
         </main>
     </div>
+
+    <script>
+        // Load real orders from localStorage
+        function loadOrders() {
+            const orders = JSON.parse(localStorage.getItem('orders')) || [];
+            const tbody = document.getElementById('ordersBody');
+            
+            if(orders.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">No active orders found.</td></tr>';
+                return;
+            }
+            
+            let html = '';
+            orders.forEach((o, index) => {
+                html += `
+                    <tr>
+                        <td>${o.orderId}</td>
+                        <td>${o.name}</td>
+                        <td>${o.address}</td>
+                        <td>${o.method} ${o.trxId ? '<br><small>Ref: '+o.trxId+'</small>' : ''}</td>
+                        <td>Rs. ${o.total.toLocaleString()}</td>
+                        <td style="color: ${o.status === 'Verified' ? '#2ecc71' : '#e74c3c'}">${o.status}</td>
+                        <td>
+                            ${o.status !== 'Verified' ? `<button class="btn-verify" onclick="verifyOrder(${index})">Verify Payment</button>` : 'Shipping...'}
+                        </td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = html;
+        }
+
+        function verifyOrder(index) {
+            let orders = JSON.parse(localStorage.getItem('orders')) || [];
+            orders[index].status = 'Verified';
+            localStorage.setItem('orders', JSON.stringify(orders));
+            loadOrders();
+        }
+
+        // Add Product Form Logic
+        document.getElementById('addProductForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const brand = document.getElementById('pBrand').value;
+            const model = document.getElementById('pModel').value;
+            const price = parseInt(document.getElementById('pPrice').value);
+            const image = document.getElementById('pImage').value;
+            
+            const newProduct = {
+                id: Date.now(),
+                name: `${brand} ${model}`,
+                price: price,
+                rating: "5.0",
+                image: image
+            };
+            
+            let customProducts = JSON.parse(localStorage.getItem('adminProducts')) || [];
+            customProducts.push(newProduct);
+            localStorage.setItem('adminProducts', JSON.stringify(customProducts));
+            
+            alert('Product added successfully! It will now appear first in the Shop.');
+            this.reset();
+        });
+
+        document.addEventListener('DOMContentLoaded', loadOrders);
+    </script>
 </body>
 </html>

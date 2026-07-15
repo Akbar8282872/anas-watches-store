@@ -3,51 +3,523 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anas Watches Store | Luxury Pre-Owned Timepieces</title>
-    
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-    
+    <title>Anas Watches Store | Luxury Pre-Owned Timepieces in Pakistan</title>
+    <meta name="description" content="Discover Pakistan's finest collection of pre-owned luxury watches. Authentic Rolex, Hublot, Omega & more at Anas Watches Store, Faisalabad.">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@200;300;400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&display=swap" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Swiper CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
-    
     <!-- Global CSS -->
     <link rel="stylesheet" href="css/global.css">
+
+    <style>
+        /* ── Home-page only styles ── */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            right: 5%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--muted);
+            font-size: 0.65rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            z-index: 2;
+            animation: fadeUp 1s 1.5s forwards;
+            opacity: 0;
+        }
+        .scroll-line {
+            width: 1px;
+            height: 60px;
+            background: linear-gradient(to bottom, var(--gold), transparent);
+            animation: scrollLine 2s ease-in-out infinite;
+        }
+        @keyframes scrollLine {
+            0% { transform: scaleY(0); transform-origin: top; }
+            50% { transform: scaleY(1); transform-origin: top; }
+            51% { transform: scaleY(1); transform-origin: bottom; }
+            100% { transform: scaleY(0); transform-origin: bottom; }
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(201,168,76,0.1);
+            border: 1px solid rgba(201,168,76,0.3);
+            border-radius: 20px;
+            padding: 0.3rem 1rem;
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+        }
+        .badge i { font-size: 0.6rem; }
+
+        /* Brands marquee already in global */
+        .marquee-section { margin: 0; }
+
+        /* Why Us */
+        .why-section { padding: 8rem 5%; }
+        .why-section .section-header { margin-bottom: 4rem; }
+
+        /* CTA Band */
+        .cta-band {
+            padding: 6rem 5%;
+            background: linear-gradient(135deg, var(--dark-2) 0%, var(--dark-1) 100%);
+            border-top: 1px solid var(--glass-border);
+            border-bottom: 1px solid var(--glass-border);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .cta-band::before {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%,-50%);
+            width: 800px; height: 400px;
+            background: radial-gradient(ellipse, rgba(201,168,76,0.08) 0%, transparent 65%);
+            pointer-events: none;
+        }
+        .cta-band h2 {
+            font-family: var(--font-display);
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 300;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+        .cta-band h2 em { font-style: italic; color: var(--gold); }
+        .cta-band p {
+            color: var(--muted);
+            font-size: 1rem;
+            max-width: 500px;
+            margin: 0 auto 2.5rem;
+            line-height: 1.7;
+            position: relative;
+            z-index: 1;
+        }
+        .cta-band .btn-primary { position: relative; z-index: 1; }
+
+        /* Testimonials */
+        .testimonials {
+            padding: 8rem 5%;
+            background: var(--dark-1);
+        }
+        .testimonials .section-header { text-align: center; margin-bottom: 4rem; }
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+        .testimonial-card {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 4px;
+            padding: 2rem;
+            transition: all 0.4s var(--ease-luxury);
+        }
+        .testimonial-card:hover {
+            border-color: var(--gold);
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-gold);
+        }
+        .testimonial-stars { color: var(--gold); margin-bottom: 1rem; font-size: 0.9rem; }
+        .testimonial-text {
+            font-size: 0.9rem;
+            line-height: 1.7;
+            color: var(--muted);
+            margin-bottom: 1.5rem;
+            font-style: italic;
+        }
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .author-avatar {
+            width: 40px; height: 40px;
+            background: linear-gradient(135deg, var(--gold-dim), var(--gold));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: #000;
+            flex-shrink: 0;
+        }
+        .author-name { font-size: 0.9rem; font-weight: 500; }
+        .author-location { font-size: 0.75rem; color: var(--muted); }
+
+        @media(max-width: 768px) {
+            .testimonial-grid { grid-template-columns: 1fr; }
+        }
+        @media(max-width: 1024px) {
+            .testimonial-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
 </head>
 <body>
-    <!-- Navbar -->
-    <header class="navbar">
-        <div class="logo">
-            ANAS <span>WATCHES</span>
-        </div>
-        <nav>
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="shop.html">Shop</a></li>
-                <li><a href="cart.html"><i class="fa-solid fa-cart-shopping"></i> Cart</a></li>
-                <li><a href="contact.html"><i class="fa-solid fa-phone"></i> Contact</a></li>
-                <li><a href="admin/dashboard.html"><i class="fa-solid fa-user"></i> Admin</a></li>
-            </ul>
-        </nav>
-    </header>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content">
-            <h1>Timeless Elegance, Pre-Owned Perfection</h1>
-            <p>Discover Pakistan's finest collection of used luxury watches, featuring authentic Hublot, Rolex, and more.</p>
-            <a href="shop.html" class="hero-cta">Shop the Collection</a>
-        </div>
-        <div class="hero-image">
-            <img src="assets/200.jpg" alt="Luxury Gold Watch">
-        </div>
-    </section>
+<!-- Custom Cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-follower" id="cursorFollower"></div>
 
-    <!-- GSAP for Animations -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="js/animations.js"></script>
+<!-- Particle Canvas -->
+<canvas id="particles-canvas"></canvas>
+
+<!-- ── Navbar ── -->
+<header class="navbar" id="navbar">
+    <a href="index.html" class="logo">ANAS <span>WATCHES</span></a>
+    <nav id="navMenu">
+        <ul>
+            <li><a href="index.html" style="color: var(--gold);">Home</a></li>
+            <li><a href="shop.html">Shop</a></li>
+            <li><a href="cart.html"><i class="fa-solid fa-cart-shopping"></i> Cart</a></li>
+            <li><a href="contact.html"><i class="fa-solid fa-phone"></i> Contact</a></li>
+            <li><a href="admin/login.html" class="btn-outline" style="padding: 0.5rem 1.2rem; font-size: 0.7rem;">Admin</a></li>
+        </ul>
+    </nav>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+    </button>
+</header>
+
+<!-- ── Hero ── -->
+<section class="hero">
+    <div class="hero-content">
+        <div class="badge"><i class="fa-solid fa-gem"></i> Pakistan's #1 Pre-Owned Luxury Store</div>
+        <div class="hero-eyebrow">Est. in Faisalabad</div>
+        <h1>Where <em>Time</em> Meets<br>True Luxury</h1>
+        <p>Discover the world's most coveted timepieces — authenticated, pre-owned, and impeccably curated for connoisseurs across Pakistan.</p>
+        <div class="hero-buttons">
+            <a href="shop.html" class="btn-primary">
+                <i class="fa-solid fa-arrow-right"></i> Explore Collection
+            </a>
+            <a href="contact.html" class="btn-outline">
+                <i class="fa-solid fa-location-dot"></i> Visit Showroom
+            </a>
+        </div>
+    </div>
+
+    <div class="hero-image">
+        <div class="hero-watch-wrap">
+            <div class="hero-watch-glow"></div>
+            <img src="assets/200.jpg" alt="Luxury Gold Watch — Anas Watches Store">
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="hero-stats">
+        <div class="stat-item">
+            <div class="stat-number" data-count="32">0</div>
+            <div class="stat-label">Watches In Stock</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number" data-count="500">0</div>
+            <div class="stat-label">Happy Customers</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number" data-count="100">0</div>
+            <div class="stat-label">% Authentic</div>
+        </div>
+    </div>
+
+    <!-- Scroll Indicator -->
+    <div class="scroll-indicator">
+        <span>Scroll</span>
+        <div class="scroll-line"></div>
+    </div>
+</section>
+
+<!-- ── Brand Marquee ── -->
+<div class="marquee-section">
+    <div class="marquee-track">
+        <span>Rolex</span><span class="dot">◆</span>
+        <span>Hublot</span><span class="dot">◆</span>
+        <span>Omega</span><span class="dot">◆</span>
+        <span>Patek Philippe</span><span class="dot">◆</span>
+        <span>Tag Heuer</span><span class="dot">◆</span>
+        <span>Breitling</span><span class="dot">◆</span>
+        <span>IWC</span><span class="dot">◆</span>
+        <span>Tudor</span><span class="dot">◆</span>
+        <span>Audemars Piguet</span><span class="dot">◆</span>
+        <span>Cartier</span><span class="dot">◆</span>
+        <span>Rolex</span><span class="dot">◆</span>
+        <span>Hublot</span><span class="dot">◆</span>
+        <span>Omega</span><span class="dot">◆</span>
+        <span>Patek Philippe</span><span class="dot">◆</span>
+        <span>Tag Heuer</span><span class="dot">◆</span>
+        <span>Breitling</span><span class="dot">◆</span>
+        <span>IWC</span><span class="dot">◆</span>
+        <span>Tudor</span><span class="dot">◆</span>
+        <span>Audemars Piguet</span><span class="dot">◆</span>
+        <span>Cartier</span><span class="dot">◆</span>
+    </div>
+</div>
+
+<!-- ── Why Choose Us ── -->
+<section class="why-us reveal" id="why">
+    <div class="why-us-text reveal">
+        <div class="section-eyebrow">Why Anas Watches</div>
+        <h2 class="section-title">Crafted for<br><em>Discerning</em> Collectors</h2>
+        <p style="color: var(--muted); margin-top: 1.5rem; line-height: 1.8; max-width: 420px; font-size: 0.95rem;">
+            We take pride in every single timepiece. From rigorous authentication to transparent pricing — your trust is our currency.
+        </p>
+    </div>
+    <div class="why-us-features">
+        <div class="feature-card">
+            <div class="feature-icon"><i class="fa-solid fa-shield-halved"></i></div>
+            <div class="feature-text">
+                <h4>100% Authenticated</h4>
+                <p>Every watch passes our rigorous verification process before it reaches you.</p>
+            </div>
+        </div>
+        <div class="feature-card" style="transition-delay: 0.1s;">
+            <div class="feature-icon"><i class="fa-solid fa-tags"></i></div>
+            <div class="feature-text">
+                <h4>Fair & Transparent Pricing</h4>
+                <p>No hidden charges. What you see is what you pay, always.</p>
+            </div>
+        </div>
+        <div class="feature-card" style="transition-delay: 0.2s;">
+            <div class="feature-icon"><i class="fa-solid fa-truck-fast"></i></div>
+            <div class="feature-text">
+                <h4>Nationwide Delivery</h4>
+                <p>Safe, insured delivery to your door anywhere in Pakistan.</p>
+            </div>
+        </div>
+        <div class="feature-card" style="transition-delay: 0.3s;">
+            <div class="feature-icon"><i class="fa-solid fa-rotate-left"></i></div>
+            <div class="feature-text">
+                <h4>Easy Returns</h4>
+                <p>Not satisfied? We offer a hassle-free return policy.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── CTA Band ── -->
+<section class="cta-band reveal">
+    <h2>Ready to Find Your<br><em>Perfect</em> Timepiece?</h2>
+    <p>Browse our curated collection of 32 hand-picked luxury watches. New arrivals every week.</p>
+    <a href="shop.html" class="btn-primary">
+        <i class="fa-solid fa-store"></i> Shop the Collection
+    </a>
+</section>
+
+<!-- ── Testimonials ── -->
+<section class="testimonials">
+    <div class="section-header">
+        <div class="section-eyebrow" style="justify-content: center;">Customer Reviews</div>
+        <h2 class="section-title" style="text-align: center;">What Our <em>Clients</em> Say</h2>
+    </div>
+    <div class="testimonial-grid">
+        <div class="testimonial-card reveal">
+            <div class="testimonial-stars">★★★★★</div>
+            <p class="testimonial-text">"Bought a Rolex Submariner and couldn't be happier. 100% authentic, great price, and fast delivery to Lahore!"</p>
+            <div class="testimonial-author">
+                <div class="author-avatar">AK</div>
+                <div>
+                    <div class="author-name">Ahmed Khan</div>
+                    <div class="author-location">Lahore, Pakistan</div>
+                </div>
+            </div>
+        </div>
+        <div class="testimonial-card reveal" style="transition-delay: 0.15s;">
+            <div class="testimonial-stars">★★★★★</div>
+            <p class="testimonial-text">"Best watch store in Pakistan. The team is knowledgeable, honest, and the collection is unbelievable. Highly recommended!"</p>
+            <div class="testimonial-author">
+                <div class="author-avatar">SH</div>
+                <div>
+                    <div class="author-name">Sana Hassan</div>
+                    <div class="author-location">Karachi, Pakistan</div>
+                </div>
+            </div>
+        </div>
+        <div class="testimonial-card reveal" style="transition-delay: 0.3s;">
+            <div class="testimonial-stars">★★★★★</div>
+            <p class="testimonial-text">"Visited the Faisalabad showroom personally. Amazing experience. Got an Omega at a price nobody else could match!"</p>
+            <div class="testimonial-author">
+                <div class="author-avatar">MU</div>
+                <div>
+                    <div class="author-name">Muhammad Usman</div>
+                    <div class="author-location">Faisalabad, Pakistan</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── Footer ── -->
+<footer>
+    <p style="font-family: var(--font-heading); font-size: 1rem; letter-spacing: 3px; margin-bottom: 0.5rem;">ANAS <span style="color: var(--gold);">WATCHES</span></p>
+    <p>&copy; 2026 Anas Watches Store, Eden Orchard Faisalabad. All rights reserved.</p>
+</footer>
+
+<!-- ═══════════════════════════
+     PREMIUM ANIMATION SCRIPTS
+     ═══════════════════════════ -->
+<script>
+/* ── 1. Custom Cursor ── */
+const cursor = document.getElementById('cursor');
+const follower = document.getElementById('cursorFollower');
+let mouseX = 0, mouseY = 0, followerX = 0, followerY = 0;
+
+document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    cursor.style.transform = `translate(${mouseX - 6}px, ${mouseY - 6}px)`;
+});
+
+function animateFollower() {
+    followerX += (mouseX - followerX) * 0.1;
+    followerY += (mouseY - followerY) * 0.1;
+    follower.style.transform = `translate(${followerX - 18}px, ${followerY - 18}px)`;
+    requestAnimationFrame(animateFollower);
+}
+animateFollower();
+
+document.querySelectorAll('a, button, .product-card, .feature-card').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+        cursor.style.transform += ' scale(2)';
+        follower.style.transform += ' scale(1.5)';
+        follower.style.borderColor = 'var(--gold)';
+    });
+    el.addEventListener('mouseleave', () => {
+        follower.style.borderColor = 'var(--gold)';
+    });
+});
+
+/* ── 2. Particle Canvas ── */
+const canvas = document.getElementById('particles-canvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+class Particle {
+    constructor() { this.reset(); }
+    reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 1.5 + 0.3;
+        this.speedX = (Math.random() - 0.5) * 0.3;
+        this.speedY = (Math.random() - 0.5) * 0.3;
+        this.opacity = Math.random() * 0.6 + 0.1;
+        this.color = Math.random() > 0.7 ? '#c9a84c' : '#ffffff';
+    }
+    update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) this.reset();
+    }
+    draw() {
+        ctx.save();
+        ctx.globalAlpha = this.opacity;
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+    }
+}
+
+for (let i = 0; i < 120; i++) particles.push(new Particle());
+
+function animateParticles() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => { p.update(); p.draw(); });
+    requestAnimationFrame(animateParticles);
+}
+animateParticles();
+
+/* ── 3. Navbar Scroll Effect ── */
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 80);
+});
+
+/* ── 4. Hamburger Menu ── */
+const hamburger = document.getElementById('hamburger');
+const navMenu = document.getElementById('navMenu');
+hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('open');
+    navMenu.classList.toggle('open');
+});
+
+/* ── 5. Scroll Reveal ── */
+const revealEls = document.querySelectorAll('.reveal');
+const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+        }
+    });
+}, { threshold: 0.12, rootMargin: '0px 0px -50px 0px' });
+
+revealEls.forEach(el => revealObserver.observe(el));
+
+/* Feature cards stagger reveal */
+const featureObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('reveal');
+    });
+}, { threshold: 0.2 });
+document.querySelectorAll('.feature-card').forEach(c => featureObserver.observe(c));
+
+/* ── 6. Animated Number Counter ── */
+function animateCounter(el, target, duration = 2000) {
+    let start = 0;
+    const step = target / (duration / 16);
+    const update = () => {
+        start += step;
+        if (start < target) {
+            el.textContent = Math.floor(start) + (el.dataset.suffix || '');
+            requestAnimationFrame(update);
+        } else {
+            el.textContent = target + (el.dataset.suffix || '');
+        }
+    };
+    update();
+}
+
+const counterObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const el = entry.target;
+            animateCounter(el, parseInt(el.dataset.count), 1800);
+            counterObserver.unobserve(el);
+        }
+    });
+}, { threshold: 0.5 });
+
+document.querySelectorAll('[data-count]').forEach(el => counterObserver.observe(el));
+
+/* ── 7. 3D Parallax on Hero Watch ── */
+const heroImage = document.querySelector('.hero-watch-wrap');
+if (heroImage) {
+    document.addEventListener('mousemove', (e) => {
+        const xAxis = (window.innerWidth / 2 - e.pageX) / 40;
+        const yAxis = (window.innerHeight / 2 - e.pageY) / 40;
+        heroImage.style.transform = `rotateY(${-xAxis}deg) rotateX(${yAxis}deg)`;
+    });
+    document.addEventListener('mouseleave', () => {
+        heroImage.style.transition = 'transform 1s var(--ease-luxury)';
+        heroImage.style.transform = 'rotateY(0deg) rotateX(0deg)';
+    });
+}
+</script>
+
 </body>
 </html>

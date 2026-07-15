@@ -1,6 +1,3 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
 // ==========================================
 // CRITICAL: PASTE YOUR FIREBASE CONFIG HERE
 // ==========================================
@@ -18,5 +15,6 @@ const firebaseConfig = {
   measurementId: "G-7L6G6JWPVH"
 };
 
-const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app);
+// Initialize Firebase using compat libraries (loaded globally from HTML)
+const app = firebase.initializeApp(firebaseConfig);
+window.db = firebase.firestore(app);

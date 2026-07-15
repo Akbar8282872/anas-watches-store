@@ -34,6 +34,8 @@ The frontend will be deployed on **Vercel** for fast global delivery.
   product.html    # Product details
   cart.html       # Shopping cart & checkout
   dashboard.html  # User/Admin dashboard
+  checkout.html   #checkout page
+  
 ```
 
 ---

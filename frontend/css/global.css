@@ -293,7 +293,7 @@ body {
     position: relative;
     overflow: hidden;
     border: none;
-    cursor: none;
+    cursor: pointer;
 }
 
 .btn-primary::before {
@@ -327,7 +327,7 @@ body {
     border-radius: 2px;
     border: 1px solid rgba(255,255,255,0.2);
     transition: all 0.4s var(--ease-luxury);
-    cursor: none;
+    cursor: pointer;
 }
 
 .btn-outline:hover {
@@ -465,7 +465,6 @@ section { position: relative; z-index: 1; }
     overflow: hidden;
     background: var(--dark-2);
     cursor: none;
-    group: true;
 }
 
 .featured-card img {
@@ -707,7 +706,7 @@ section { position: relative; z-index: 1; }
     font-weight: 500;
     letter-spacing: 2px;
     text-transform: uppercase;
-    cursor: none;
+    cursor: pointer;
     transition: all 0.4s var(--ease-luxury);
     border-radius: 2px;
     position: relative;

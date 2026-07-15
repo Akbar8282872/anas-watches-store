@@ -13,52 +13,60 @@
             max-width: 1200px;
             margin: 0 auto;
         }
-        
+
         .cart-header {
             font-family: var(--font-heading);
-            color: var(--color-gold);
+            color: var(--gold);
             font-size: 2.5rem;
             margin-bottom: 2rem;
-            border-bottom: 1px solid #333;
+            border-bottom: 1px solid var(--glass-border);
             padding-bottom: 1rem;
         }
-        
+
         .cart-container {
             display: flex;
             gap: 3rem;
+            flex-wrap: wrap;
         }
-        
+
         .cart-items {
             flex: 2;
+            min-width: 280px;
         }
-        
+
         .cart-item {
             display: flex;
             align-items: center;
-            background-color: var(--color-bg-secondary);
+            background-color: var(--dark-2);
+            border: 1px solid var(--glass-border);
             padding: 1.5rem;
             margin-bottom: 1rem;
             border-radius: 8px;
+            transition: border-color 0.3s;
         }
-        
+
+        .cart-item:hover { border-color: var(--gold); }
+
         .cart-item img {
             width: 100px;
             height: 100px;
             object-fit: cover;
-            border: 1px solid var(--color-gold);
+            border: 1px solid var(--gold);
             margin-right: 1.5rem;
+            border-radius: 4px;
         }
-        
+
         .item-details h3 {
             font-family: var(--font-heading);
             margin-bottom: 0.5rem;
+            font-size: 1rem;
         }
-        
+
         .item-price {
-            color: var(--color-gold);
+            color: var(--gold);
             font-weight: 600;
         }
-        
+
         .remove-btn {
             margin-left: auto;
             color: #e74c3c;
@@ -66,113 +74,144 @@
             border: none;
             cursor: pointer;
             font-size: 1.2rem;
+            padding: 0.5rem;
+            transition: transform 0.2s;
         }
-        
+        .remove-btn:hover { transform: scale(1.2); }
+
         .cart-summary {
             flex: 1;
-            background-color: var(--color-bg-secondary);
+            min-width: 260px;
+            background-color: var(--dark-2);
+            border: 1px solid var(--glass-border);
             padding: 2rem;
             border-radius: 8px;
             height: fit-content;
         }
-        
+
         .cart-summary h3 {
             margin-bottom: 1.5rem;
             font-family: var(--font-heading);
-            color: var(--color-gold);
+            color: var(--gold);
+            font-size: 1.3rem;
         }
-        
+
         .summary-row {
             display: flex;
             justify-content: space-between;
             margin-bottom: 1rem;
-            color: var(--color-text-muted);
+            color: var(--muted);
+            font-size: 0.9rem;
         }
-        
+
         .summary-total {
             display: flex;
             justify-content: space-between;
             margin-top: 1.5rem;
             padding-top: 1.5rem;
-            border-top: 1px solid #333;
+            border-top: 1px solid var(--glass-border);
             font-weight: 700;
             font-size: 1.2rem;
-            color: var(--color-text-light);
+            color: var(--white);
         }
-        
+
         .checkout-btn {
             width: 100%;
-            background-color: var(--color-gold);
+            background-color: var(--gold);
             color: #000;
             border: none;
             padding: 1rem;
             margin-top: 2rem;
-            font-weight: 600;
+            font-weight: 700;
+            font-size: 0.85rem;
             text-transform: uppercase;
+            letter-spacing: 2px;
             cursor: pointer;
             border-radius: 4px;
+            transition: background 0.3s, transform 0.2s;
         }
-        
+
         .checkout-btn:hover {
-            background-color: var(--color-gold-hover);
+            background-color: var(--gold-light);
+            transform: translateY(-2px);
         }
-        
-        /* Checkout Form Modal (Hidden by default) */
+
+        /* Checkout Form Modal */
         .checkout-modal {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(0,0,0,0.8);
-            z-index: 1000;
+            background-color: rgba(0,0,0,0.85);
+            z-index: 9000;
             justify-content: center;
             align-items: center;
         }
-        
+
         .modal-content {
-            background-color: var(--color-bg-primary);
+            background-color: var(--dark-1);
             padding: 3rem;
-            border: 2px solid var(--color-gold);
+            border: 1px solid var(--gold);
             border-radius: 8px;
             width: 100%;
-            max-width: 500px;
+            max-width: 520px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.9);
         }
-        
+
         .modal-content h2 {
-            color: var(--color-gold);
+            color: var(--gold);
+            font-family: var(--font-heading);
             margin-bottom: 1.5rem;
+            font-size: 1.8rem;
         }
-        
+
         .form-group {
-            margin-bottom: 1rem;
+            margin-bottom: 1.2rem;
         }
-        
+
         .form-group label {
             display: block;
             margin-bottom: 0.5rem;
-            color: var(--color-text-muted);
+            color: var(--muted);
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
-        
+
         .form-group input, .form-group select {
             width: 100%;
-            padding: 0.8rem;
-            background-color: #1a1a1a;
-            border: 1px solid #333;
-            color: #fff;
+            padding: 0.9rem;
+            background-color: var(--dark-3);
+            border: 1px solid var(--glass-border);
+            color: var(--white);
             border-radius: 4px;
-        }
-        
-        .payment-info {
-            background-color: rgba(212, 175, 55, 0.1);
-            padding: 1rem;
-            border-left: 3px solid var(--color-gold);
-            margin-top: 1rem;
             font-size: 0.9rem;
-            display: none; /* Shown if easypaisa/jazzcash selected */
+            transition: border-color 0.3s;
         }
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+        .form-group select option { background: var(--dark-1); }
+
+        .payment-info {
+            background-color: rgba(201,168,76,0.08);
+            padding: 1rem 1.2rem;
+            border-left: 3px solid var(--gold);
+            border-radius: 0 4px 4px 0;
+            margin-top: 0.5rem;
+            font-size: 0.88rem;
+            line-height: 1.8;
+            display: none;
+            color: var(--white);
+        }
+        .payment-info strong { color: var(--gold); }
     </style>
+
 </head>
 <body>
-    <header class="navbar" style="background-color: var(--color-bg-primary); padding-bottom: 1rem;">
+    <header class="navbar" id="navbar">
         <div class="logo">ANAS <span>WATCHES</span></div>
         <nav>
             <ul>
@@ -231,11 +270,12 @@
                         <option value="COD">Cash on Delivery (COD)</option>
                         <option value="Easypaisa">Easypaisa</option>
                         <option value="Jazzcash">Jazzcash</option>
+                        <option value="BankTransfer">Online Bank Transfer</option>
                     </select>
                 </div>
                 
                 <div class="payment-info" id="paymentInfo">
-                    Please send the total amount to <strong>0370-6178733</strong>.<br><br>
+                    <div id="paymentInstructions">Please send the total amount to <strong>0370-6178733</strong>.</div><br>
                     <label>Transaction Reference ID:</label>
                     <input type="text" id="trxId" placeholder="Enter Ref #">
                 </div>
@@ -248,38 +288,51 @@
         </div>
     </div>
 
-    <script type="module">
-        import { db } from './js/firebase-config.js';
-        import { collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    <!-- Firebase Compat Libraries -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="js/firebase-config.js"></script>
 
-        window.togglePaymentDetails = function() {
+    <script>
+        function togglePaymentInfo() {
             const method = document.getElementById("paymentMethod").value;
-            const details = document.getElementById("easypaisaDetails");
-            if(method === "Easypaisa" || method === "Jazzcash") {
-                details.style.display = "block";
+            const info = document.getElementById("paymentInfo");
+            const instructions = document.getElementById("paymentInstructions");
+            if (method === "Easypaisa" || method === "Jazzcash") {
+                info.style.display = "block";
+                instructions.innerHTML = `Send the total to <strong>0370-6178733</strong> via <strong>${method}</strong>.`;
+                document.getElementById("trxId").required = true;
+            } else if (method === "BankTransfer") {
+                info.style.display = "block";
+                instructions.innerHTML = `Bank: <strong>Meezan Bank</strong><br>Account: <strong>03706178733</strong><br>Account Title: <strong>Anas Watches Store</strong><br>IBAN: <strong>PK36MEZN0001234567890123</strong>`;
                 document.getElementById("trxId").required = true;
             } else {
-                details.style.display = "none";
+                info.style.display = "none";
                 document.getElementById("trxId").required = false;
             }
         }
-        
-        window.loadCart = function() {
+
+        function loadCart() {
             let cart = JSON.parse(localStorage.getItem("cart")) || [];
             const container = document.getElementById("cartItemsContainer");
             const subtotalEl = document.getElementById("subtotal");
             const totalEl = document.getElementById("total");
-            
+
             if (cart.length === 0) {
-                container.innerHTML = "<p>Your cart is empty.</p>";
+                container.innerHTML = `
+                    <div style="text-align:center; padding: 4rem; color: var(--muted);">
+                        <i class="fa-solid fa-cart-shopping" style="font-size:3rem; color: var(--gold); margin-bottom:1rem;"></i>
+                        <p style="font-size:1.2rem;">Your cart is empty.</p>
+                        <a href="shop.html" style="color:var(--gold); text-decoration:underline; margin-top:1rem; display:inline-block;">Browse the Collection</a>
+                    </div>`;
                 subtotalEl.innerText = "Rs. 0";
                 totalEl.innerText = "Rs. 0";
                 return;
             }
-            
+
             let html = "";
             let total = 0;
-            
+
             cart.forEach((item, index) => {
                 total += item.price;
                 html += `
@@ -293,62 +346,61 @@
                     </div>
                 `;
             });
-            
+
             container.innerHTML = html;
             subtotalEl.innerText = `Rs. ${total.toLocaleString()}`;
             totalEl.innerText = `Rs. ${total.toLocaleString()}`;
         }
-        
-        window.removeItem = function(index) {
+
+        function removeItem(index) {
             let cart = JSON.parse(localStorage.getItem("cart")) || [];
             cart.splice(index, 1);
             localStorage.setItem("cart", JSON.stringify(cart));
             loadCart();
         }
-        
-        window.openCheckout = function() {
+
+        function openCheckout() {
             let cart = JSON.parse(localStorage.getItem("cart")) || [];
-            if(cart.length === 0) return alert("Cart is empty!");
+            if (cart.length === 0) return alert("Your cart is empty!");
             document.getElementById('checkoutModal').style.display = 'flex';
         }
-        
-        window.closeCheckout = function() {
+
+        function closeCheckout() {
             document.getElementById('checkoutModal').style.display = 'none';
         }
-        
+
         document.getElementById("checkoutForm").addEventListener("submit", async function(e) {
             e.preventDefault();
-            
             let cart = JSON.parse(localStorage.getItem("cart")) || [];
-            if(cart.length === 0) return alert("Cart is empty!");
-            
+            if (cart.length === 0) return alert("Cart is empty!");
+
             let total = cart.reduce((sum, item) => sum + item.price, 0);
-            const name = e.target.querySelector('input[type="text"]').value;
-            const address = e.target.querySelectorAll('input[type="text"]')[1].value;
+            const inputs = e.target.querySelectorAll('input[type="text"]');
+            const name = inputs[0].value;
+            const address = inputs[1].value;
             const method = document.getElementById("paymentMethod").value;
             const trxId = document.getElementById("trxId").value;
-            
+
             const newOrder = {
                 orderId: 'ORD-' + Math.floor(Math.random() * 90000 + 10000),
-                name: name,
-                address: address,
-                method: method,
-                trxId: trxId,
-                total: total,
+                name, address, method, trxId, total,
                 status: 'Pending Verification',
                 items: cart,
                 timestamp: new Date().toISOString()
             };
-            
+
             try {
-                await addDoc(collection(db, "orders"), newOrder);
-                alert("Order securely transmitted! The admin will verify your order shortly.");
+                await window.db.collection("orders").add(newOrder);
+                alert("✅ Order placed! Admin will verify your payment shortly.");
                 localStorage.removeItem("cart");
                 closeCheckout();
                 loadCart();
             } catch(error) {
-                console.error("Error writing document: ", error);
-                alert("Database disconnected. Add Firebase config in js/firebase-config.js to enable live orders.");
+                console.error("Firebase error:", error);
+                alert("Order recorded locally. Firebase not connected yet.");
+                localStorage.removeItem("cart");
+                closeCheckout();
+                loadCart();
             }
         });
 

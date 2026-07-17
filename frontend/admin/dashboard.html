@@ -176,13 +176,19 @@
             let html = '';
             snapshot.forEach(docSnap => {
                 const o = docSnap.data();
-                // Build product image thumbnails from items array
-                const itemImgs = (o.items || []).map(item => `
+                // Fix image path: relative paths need ../ prefix (dashboard is in admin/ subfolder)
+                const itemImgs = (o.items || []).map(item => {
+                    const src = (item.image && (item.image.startsWith('http') || item.image.startsWith('data:')))
+                        ? item.image
+                        : '../' + item.image;
+                    return `
                     <div style="display:inline-block; text-align:center; margin:3px;">
-                        <img src="${item.image}" alt="${item.name}" title="${item.name}" style="width:55px;height:55px;object-fit:cover;border-radius:4px;border:1px solid #c9a84c;">
+                        <img src="${src}" alt="${item.name}" title="${item.name}"
+                             style="width:55px;height:55px;object-fit:cover;border-radius:4px;border:1px solid #c9a84c;"
+                             onerror="this.style.background='#333';this.alt='No img';">
                         <div style="font-size:0.65rem;color:#aaa;max-width:60px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${item.name}</div>
-                    </div>
-                `).join('');
+                    </div>`;
+                }).join('');
                 html += `
                     <tr>
                         <td>${o.orderId}</td><td>${o.name}</td><td>${o.phone || '—'}</td><td>${o.address}</td>

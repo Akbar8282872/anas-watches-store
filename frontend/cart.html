@@ -259,8 +259,8 @@
                         <input type="text" id="custAddress" required placeholder="Address, City">
                     </div>
                     <div class="form-group">
-                        <label>Phone Number</label>
-                        <input type="tel" id="custPhone" required placeholder="e.g. 0300-1234567">
+                        <label>Phone Number <span style="color:var(--muted);font-size:0.75rem;">(Pakistani format: 0300-1234567)</span></label>
+                        <input type="tel" id="custPhone" required placeholder="0300-1234567" maxlength="12" inputmode="numeric">
                     </div>
                     <div class="form-group">
                         <label>Payment Method</label>
@@ -290,6 +290,31 @@
     <script src="js/firebase-config.js"></script>
 
     <script>
+        // Pakistani phone auto-format: 0300-1234567 (max 11 digits)
+        document.addEventListener('DOMContentLoaded', function() {
+            const phoneInput = document.getElementById('custPhone');
+            phoneInput.addEventListener('input', function(e) {
+                // Strip non-digits
+                let digits = this.value.replace(/\D/g, '');
+                // Max 11 digits
+                if (digits.length > 11) digits = digits.slice(0, 11);
+                // Insert dash after 4th digit
+                if (digits.length > 4) {
+                    this.value = digits.slice(0, 4) + '-' + digits.slice(4);
+                } else {
+                    this.value = digits;
+                }
+            });
+            phoneInput.addEventListener('keydown', function(e) {
+                // Allow: backspace, delete, tab, arrows, home, end
+                if ([8,9,13,27,46,35,36,37,38,39,40].includes(e.keyCode)) return;
+                // Block non-numeric keys (except dash already handled above)
+                if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                    e.preventDefault();
+                }
+            });
+        });
+
         function togglePaymentInfo() {
             const method = document.getElementById("paymentMethod").value;
             const info = document.getElementById("paymentInfo");
@@ -359,6 +384,16 @@
             e.preventDefault();
             let cart = JSON.parse(localStorage.getItem("cart")) || [];
             if (cart.length === 0) return alert("Cart is empty!");
+
+            // Validate phone: must be exactly 11 digits (format: 0300-1234567 = 12 chars)
+            const phoneVal = document.getElementById("custPhone").value;
+            const phoneDigits = phoneVal.replace(/\D/g, '');
+            if (phoneDigits.length !== 11) {
+                alert("⚠️ Please enter a valid 11-digit Pakistani phone number (e.g. 0300-1234567)");
+                document.getElementById("custPhone").focus();
+                return;
+            }
+
 
             let total = cart.reduce((sum, item) => sum + item.price, 0);
             const name = document.getElementById("custName").value;

@@ -259,6 +259,10 @@
                         <input type="text" id="custAddress" required placeholder="Address, City">
                     </div>
                     <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="tel" id="custPhone" required placeholder="e.g. 0300-1234567">
+                    </div>
+                    <div class="form-group">
                         <label>Payment Method</label>
                         <select id="paymentMethod" onchange="togglePaymentInfo()" required>
                             <option value="COD">Cash on Delivery (COD)</option>
@@ -359,12 +363,13 @@
             let total = cart.reduce((sum, item) => sum + item.price, 0);
             const name = document.getElementById("custName").value;
             const address = document.getElementById("custAddress").value;
+            const phone = document.getElementById("custPhone").value;
             const method = document.getElementById("paymentMethod").value;
             const trxId = document.getElementById("trxId").value;
 
             const newOrder = {
                 orderId: 'ORD-' + Math.floor(Math.random() * 90000 + 10000),
-                name, address, method, trxId, total,
+                name, address, phone, method, trxId, total,
                 status: 'Pending Verification',
                 items: cart,
                 timestamp: new Date().toISOString()

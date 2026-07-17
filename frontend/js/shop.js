@@ -88,11 +88,11 @@ async function renderProducts() {
 
 window.addToCart = function(productId) {
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
-    const product = products.find(p => p.id === productId);
+    const product = products.find(p => String(p.id) === String(productId));
     if (product) {
         cart.push(product);
         localStorage.setItem("cart", JSON.stringify(cart));
-        showToast(`✓ ${product.name} added to cart!`);
+        window.location.href = "cart.html";
     }
 }
 

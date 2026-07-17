@@ -219,7 +219,6 @@
                 <li><a href="shop.html">Shop</a></li>
                 <li><a href="cart.html" style="color: var(--color-gold);"><i class="fa-solid fa-cart-shopping"></i> Cart</a></li>
                 <li><a href="contact.html"><i class="fa-solid fa-phone"></i> Contact</a></li>
-                <li><a href="admin/dashboard.html"><i class="fa-solid fa-user"></i> Admin</a></li>
             </ul>
         </nav>
     </header>
@@ -246,47 +245,40 @@
                     <span>Total</span>
                     <span id="total">Rs. 0</span>
                 </div>
-                <button class="checkout-btn" onclick="openCheckout()">Proceed to Checkout</button>
+                
+                <hr style="border:0; border-top: 1px solid var(--glass-border); margin: 1.5rem 0;">
+                
+                <h3 style="font-size: 1.1rem; margin-bottom: 1rem;">Shipping & Payment</h3>
+                <form id="checkoutForm">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="custName" required placeholder="Your full name">
+                    </div>
+                    <div class="form-group">
+                        <label>Shipping Address</label>
+                        <input type="text" id="custAddress" required placeholder="Address, City">
+                    </div>
+                    <div class="form-group">
+                        <label>Payment Method</label>
+                        <select id="paymentMethod" onchange="togglePaymentInfo()" required>
+                            <option value="COD">Cash on Delivery (COD)</option>
+                            <option value="Easypaisa">Easypaisa</option>
+                            <option value="Jazzcash">Jazzcash</option>
+                            <option value="BankTransfer">Online Bank Transfer</option>
+                        </select>
+                    </div>
+                    
+                    <div class="payment-info" id="paymentInfo" style="margin-bottom: 1rem;">
+                        <div id="paymentInstructions">Please send the total amount to <strong>0370-6178733</strong>.</div><br>
+                        <label>Transaction Reference ID:</label>
+                        <input type="text" id="trxId" placeholder="Enter Ref #">
+                    </div>
+                    
+                    <button type="submit" class="checkout-btn" style="margin-top: 1rem; width: 100%;">Place Order</button>
+                </form>
             </div>
         </div>
     </section>
-
-    <!-- Checkout Modal -->
-    <div class="checkout-modal" id="checkoutModal">
-        <div class="modal-content">
-            <h2>Checkout</h2>
-            <form id="checkoutForm" onsubmit="submitOrder(event)">
-                <div class="form-group">
-                    <label>Full Name</label>
-                    <input type="text" required>
-                </div>
-                <div class="form-group">
-                    <label>Shipping Address</label>
-                    <input type="text" required>
-                </div>
-                <div class="form-group">
-                    <label>Payment Method</label>
-                    <select id="paymentMethod" onchange="togglePaymentInfo()" required>
-                        <option value="COD">Cash on Delivery (COD)</option>
-                        <option value="Easypaisa">Easypaisa</option>
-                        <option value="Jazzcash">Jazzcash</option>
-                        <option value="BankTransfer">Online Bank Transfer</option>
-                    </select>
-                </div>
-                
-                <div class="payment-info" id="paymentInfo">
-                    <div id="paymentInstructions">Please send the total amount to <strong>0370-6178733</strong>.</div><br>
-                    <label>Transaction Reference ID:</label>
-                    <input type="text" id="trxId" placeholder="Enter Ref #">
-                </div>
-                
-                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
-                    <button type="button" class="checkout-btn" style="background-color: transparent; border: 1px solid var(--color-gold); color: var(--color-gold);" onclick="closeCheckout()">Cancel</button>
-                    <button type="submit" class="checkout-btn" style="margin-top: 0;">Place Order</button>
-                </div>
-            </form>
-        </div>
-    </div>
 
     <!-- Firebase Compat Libraries -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
@@ -359,25 +351,14 @@
             loadCart();
         }
 
-        function openCheckout() {
-            let cart = JSON.parse(localStorage.getItem("cart")) || [];
-            if (cart.length === 0) return alert("Your cart is empty!");
-            document.getElementById('checkoutModal').style.display = 'flex';
-        }
-
-        function closeCheckout() {
-            document.getElementById('checkoutModal').style.display = 'none';
-        }
-
         document.getElementById("checkoutForm").addEventListener("submit", async function(e) {
             e.preventDefault();
             let cart = JSON.parse(localStorage.getItem("cart")) || [];
             if (cart.length === 0) return alert("Cart is empty!");
 
             let total = cart.reduce((sum, item) => sum + item.price, 0);
-            const inputs = e.target.querySelectorAll('input[type="text"]');
-            const name = inputs[0].value;
-            const address = inputs[1].value;
+            const name = document.getElementById("custName").value;
+            const address = document.getElementById("custAddress").value;
             const method = document.getElementById("paymentMethod").value;
             const trxId = document.getElementById("trxId").value;
 
@@ -393,18 +374,20 @@
                 await window.db.collection("orders").add(newOrder);
                 alert("✅ Order placed! Admin will verify your payment shortly.");
                 localStorage.removeItem("cart");
-                closeCheckout();
                 loadCart();
+                document.getElementById("checkoutForm").reset();
+                document.getElementById("paymentInfo").style.display = "none";
             } catch(error) {
                 console.error("Firebase error:", error);
-                alert("Order recorded locally. Firebase not connected yet.");
-                localStorage.removeItem("cart");
-                closeCheckout();
-                loadCart();
+                alert("Could not place order via Firebase. Please check connection.");
             }
         });
 
         document.addEventListener("DOMContentLoaded", loadCart);
     </script>
+
+    <!-- Floating WhatsApp Button -->
+    <a href="https://wa.me/923249970874" class="whatsapp-btn" target="_blank" aria-label="Chat on WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+
 </body>
 </html>

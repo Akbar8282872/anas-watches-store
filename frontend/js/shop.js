@@ -49,7 +49,9 @@ async function renderProducts() {
         const querySnapshot = await window.db.collection("adminProducts").get();
         let customProducts = [];
         querySnapshot.forEach((doc) => {
-            customProducts.push(doc.data());
+            let data = doc.data();
+            data.id = doc.id; // Assign document ID to avoid undefined product ID
+            customProducts.push(data);
         });
         products = [...customProducts, ...products];
     } catch(e) {
@@ -74,7 +76,7 @@ async function renderProducts() {
                     <h3>${p.name}</h3>
                     <div class="product-price">Rs. ${p.price.toLocaleString()}</div>
                     <div class="product-rating">${stars} <span style="color:var(--muted); font-size:0.75rem">(${p.rating})</span></div>
-                    <button class="btn-add-cart" onclick="addToCart(${p.id})">
+                    <button class="btn-add-cart" onclick="addToCart('${p.id}')">
                         <i class="fa-solid fa-cart-plus"></i> Add to Cart
                     </button>
                 </div>

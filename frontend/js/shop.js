@@ -90,6 +90,10 @@ window.addToCart = function(productId) {
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
     const product = products.find(p => String(p.id) === String(productId));
     if (product) {
+        if (cart.filter(item => String(item.id) === String(productId)).length >= 10) {
+            alert("You cannot add more than 10 of this watch to your cart.");
+            return;
+        }
         cart.push(product);
         localStorage.setItem("cart", JSON.stringify(cart));
         window.location.href = "cart.html";

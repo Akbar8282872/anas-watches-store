@@ -51,10 +51,9 @@ body {
     cursor: none !important;
 }
 
-/* Force hide default cursor on everything */
-*, *::before, *::after {
-    cursor: none !important;
-}
+/* Custom cursor: hide default on links and buttons */
+a, button, [onclick], input, select, textarea, label { cursor: none !important; }
+
 
 /* ── Custom Cursor ── */
 .cursor {

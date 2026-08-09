@@ -166,9 +166,7 @@
 </head>
 <body>
 
-<!-- Custom Cursor -->
-<div class="cursor" id="cursor"></div>
-<div class="cursor-follower" id="cursorFollower"></div>
+
 
 <!-- Particle Canvas -->
 <canvas id="particles-canvas"></canvas>
@@ -372,35 +370,6 @@
      PREMIUM ANIMATION SCRIPTS
      ═══════════════════════════ -->
 <script>
-/* ── 1. Custom Cursor ── */
-const cursor = document.getElementById('cursor');
-const follower = document.getElementById('cursorFollower');
-let mouseX = 0, mouseY = 0, followerX = 0, followerY = 0;
-
-document.addEventListener('mousemove', (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-    cursor.style.transform = `translate(${mouseX - 6}px, ${mouseY - 6}px)`;
-});
-
-function animateFollower() {
-    followerX += (mouseX - followerX) * 0.1;
-    followerY += (mouseY - followerY) * 0.1;
-    follower.style.transform = `translate(${followerX - 18}px, ${followerY - 18}px)`;
-    requestAnimationFrame(animateFollower);
-}
-animateFollower();
-
-document.querySelectorAll('a, button, .product-card, .feature-card').forEach(el => {
-    el.addEventListener('mouseenter', () => {
-        cursor.style.transform += ' scale(2)';
-        follower.style.transform += ' scale(1.5)';
-        follower.style.borderColor = 'var(--gold)';
-    });
-    el.addEventListener('mouseleave', () => {
-        follower.style.borderColor = 'var(--gold)';
-    });
-});
 
 /* ── 2. Particle Canvas ── */
 const canvas = document.getElementById('particles-canvas');
@@ -530,5 +499,6 @@ if (heroImage) {
 <!-- Floating WhatsApp Button -->
 <a href="https://wa.me/923433467891" class="whatsapp-btn" target="_blank" aria-label="Chat on WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
 
+<script src="js/cursor.js"></script>
 </body>
 </html>

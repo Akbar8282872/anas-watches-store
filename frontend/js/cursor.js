@@ -1,74 +1,66 @@
-// cursor.js — Bulletproof gold cursor for all pages
-(function() {
-    function initCursor() {
-        // Avoid duplicates
-        if (document.getElementById('gc')) return;
-
-        // Create cursor elements
+// Minimal bulletproof cursor — no event interference
+(function () {
+    function init() {
+        // Dot cursor
         var c = document.createElement('div');
-        c.id = 'gc';
-        c.className = 'cursor';
+        c.style.cssText = [
+            'position:fixed',
+            'width:12px',
+            'height:12px',
+            'background:#c9a84c',
+            'border-radius:50%',
+            'pointer-events:none',
+            'z-index:999999',
+            'top:0',
+            'left:0',
+            'box-shadow:0 0 10px rgba(201,168,76,0.9),0 0 20px rgba(201,168,76,0.4)',
+            'transform:translate(-100px,-100px)',
+            'transition:none'
+        ].join(';');
 
+        // Ring follower
         var f = document.createElement('div');
-        f.id = 'gcf';
-        f.className = 'cursor-follower';
+        f.style.cssText = [
+            'position:fixed',
+            'width:34px',
+            'height:34px',
+            'border:2px solid #c9a84c',
+            'border-radius:50%',
+            'pointer-events:none',
+            'z-index:999998',
+            'top:0',
+            'left:0',
+            'opacity:0.65',
+            'transform:translate(-100px,-100px)',
+            'transition:none'
+        ].join(';');
 
         document.body.appendChild(c);
         document.body.appendChild(f);
 
-        var mouseX = window.innerWidth / 2;
-        var mouseY = window.innerHeight / 2;
-        var followerX = mouseX;
-        var followerY = mouseY;
+        var mx = 0, my = 0, fx = 0, fy = 0;
 
-        // Track mouse
-        document.addEventListener('mousemove', function(e) {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-            // Move main cursor instantly
-            c.style.transform = 'translate(' + (mouseX - 6) + 'px, ' + (mouseY - 6) + 'px)';
+        // Track mouse — passive listener, zero interference with clicks
+        document.addEventListener('mousemove', function (e) {
+            mx = e.clientX;
+            my = e.clientY;
+            // Dot follows instantly
+            c.style.transform = 'translate(' + (mx - 6) + 'px,' + (my - 6) + 'px)';
         }, { passive: true });
 
-        // Smooth follower animation
-        function animateFollower() {
-            followerX += (mouseX - followerX) * 0.12;
-            followerY += (mouseY - followerY) * 0.12;
-            f.style.transform = 'translate(' + (followerX - 18) + 'px, ' + (followerY - 18) + 'px)';
-            requestAnimationFrame(animateFollower);
-        }
-        animateFollower();
-
-        // Grow on hover
-        document.addEventListener('mouseover', function(e) {
-            var el = e.target.closest('a, button, [onclick], input, select, textarea, .product-card, .featured-card, .btn-add-cart, .checkout-btn, .whatsapp-btn');
-            if (el) {
-                c.style.transform = 'translate(' + (mouseX - 6) + 'px, ' + (mouseY - 6) + 'px) scale(2.2)';
-                f.style.opacity = '1';
-                f.style.borderWidth = '2px';
-            }
-        });
-
-        document.addEventListener('mouseout', function(e) {
-            var el = e.target.closest('a, button, [onclick], input, select, textarea, .product-card, .featured-card, .btn-add-cart, .checkout-btn, .whatsapp-btn');
-            if (el) {
-                c.style.transform = 'translate(' + (mouseX - 6) + 'px, ' + (mouseY - 6) + 'px) scale(1)';
-                f.style.opacity = '0.7';
-                f.style.borderWidth = '2px';
-            }
-        });
-
-        // Mouse click pulse
-        document.addEventListener('mousedown', function() {
-            c.style.transform = 'translate(' + (mouseX - 6) + 'px, ' + (mouseY - 6) + 'px) scale(0.8)';
-        });
-        document.addEventListener('mouseup', function() {
-            c.style.transform = 'translate(' + (mouseX - 6) + 'px, ' + (mouseY - 6) + 'px) scale(1)';
-        });
+        // Ring follows smoothly via rAF
+        (function loop() {
+            fx += (mx - fx) * 0.12;
+            fy += (my - fy) * 0.12;
+            f.style.transform = 'translate(' + (fx - 17) + 'px,' + (fy - 17) + 'px)';
+            requestAnimationFrame(loop);
+        })();
     }
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initCursor);
+    // Run as early as possible
+    if (document.body) {
+        init();
     } else {
-        initCursor();
+        document.addEventListener('DOMContentLoaded', init);
     }
 })();

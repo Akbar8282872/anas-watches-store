@@ -48,11 +48,10 @@ body {
     font-family: var(--font-body);
     font-weight: 300;
     overflow-x: hidden;
-    cursor: none !important;
+    cursor: none;
 }
 
-/* Custom cursor: hide default on links and buttons */
-a, button, [onclick], input, select, textarea, label { cursor: none !important; }
+/* cursor.js injects the cursor divs dynamically */
 
 
 /* ── Custom Cursor ── */

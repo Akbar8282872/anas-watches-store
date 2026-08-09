@@ -355,13 +355,19 @@
             let total = 0;
 
             cart.forEach((item, index) => {
-                total += item.price;
+                let qty = item.quantity || 1;
+                total += item.price * qty;
                 html += `
                     <div class="cart-item">
                         <img src="${item.image}" alt="${item.name}">
-                        <div class="item-details">
+                        <div class="item-details" style="flex:1;">
                             <h3>${item.name}</h3>
                             <div class="item-price">Rs. ${item.price.toLocaleString()}</div>
+                        </div>
+                        <div class="quantity-controls" style="display: flex; align-items: center; margin-right: 1.5rem;">
+                            <button onclick="updateQuantity(${index}, -1)" style="background:var(--dark-3); color:var(--white); border:1px solid var(--glass-border); padding:0.5rem 0.8rem; cursor:pointer; border-radius: 4px;">-</button>
+                            <span style="margin: 0 1rem; color:var(--white); font-weight:bold;">${qty}</span>
+                            <button onclick="updateQuantity(${index}, 1)" style="background:var(--dark-3); color:var(--white); border:1px solid var(--glass-border); padding:0.5rem 0.8rem; cursor:pointer; border-radius: 4px;">+</button>
                         </div>
                         <button class="remove-btn" onclick="removeItem(${index})"><i class="fa-solid fa-trash"></i></button>
                     </div>
@@ -371,6 +377,25 @@
             container.innerHTML = html;
             subtotalEl.innerText = `Rs. ${total.toLocaleString()}`;
             totalEl.innerText = `Rs. ${total.toLocaleString()}`;
+        }
+
+        function updateQuantity(index, change) {
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+            if (cart[index]) {
+                let currentQty = cart[index].quantity || 1;
+                let newQty = currentQty + change;
+                if (newQty <= 0) {
+                    cart.splice(index, 1);
+                } else if (newQty > 10) {
+                    alert("You cannot add more than 10 of this watch to your cart.");
+                    newQty = 10;
+                    cart[index].quantity = newQty;
+                } else {
+                    cart[index].quantity = newQty;
+                }
+                localStorage.setItem("cart", JSON.stringify(cart));
+                loadCart();
+            }
         }
 
         function removeItem(index) {
@@ -395,7 +420,7 @@
             }
 
 
-            let total = cart.reduce((sum, item) => sum + item.price, 0);
+            let total = cart.reduce((sum, item) => sum + (item.price * (item.quantity || 1)), 0);
             const name = document.getElementById("custName").value;
             const address = document.getElementById("custAddress").value;
             const phone = document.getElementById("custPhone").value;

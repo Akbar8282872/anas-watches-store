@@ -61,7 +61,6 @@ body {
     pointer-events: none;
     z-index: 99999;
     transition: transform 0.1s, opacity 0.3s;
-    mix-blend-mode: difference;
 }
 
 .cursor-follower {

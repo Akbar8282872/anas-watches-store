@@ -125,16 +125,23 @@
     <script>
         function addToCartSingle() {
             let cart = JSON.parse(localStorage.getItem("cart")) || [];
-            if (cart.filter(item => item.id === 999).length >= 10) {
-                alert("You cannot add more than 10 of this watch to your cart.");
-                return;
+            let existingItem = cart.find(item => item.id === 999);
+            if (existingItem) {
+                let qty = existingItem.quantity || 1;
+                if (qty >= 10) {
+                    alert("You cannot add more than 10 of this watch to your cart.");
+                    return;
+                }
+                existingItem.quantity = qty + 1;
+            } else {
+                cart.push({
+                    id: 999,
+                    name: "Hublot Classic Fusion - Ref 824",
+                    price: 8500,
+                    image: "assets/200.jpg",
+                    quantity: 1
+                });
             }
-            cart.push({
-                id: 999,
-                name: "Hublot Classic Fusion - Ref 824",
-                price: 8500,
-                image: "assets/200.jpg"
-            });
             localStorage.setItem("cart", JSON.stringify(cart));
             window.location.href = "cart.html";
         }

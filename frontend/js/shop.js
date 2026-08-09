@@ -90,11 +90,18 @@ window.addToCart = function(productId) {
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
     const product = products.find(p => String(p.id) === String(productId));
     if (product) {
-        if (cart.filter(item => String(item.id) === String(productId)).length >= 10) {
-            alert("You cannot add more than 10 of this watch to your cart.");
-            return;
+        let existingItem = cart.find(item => String(item.id) === String(productId));
+        if (existingItem) {
+            let qty = existingItem.quantity || 1;
+            if (qty >= 10) {
+                alert("You cannot add more than 10 of this watch to your cart.");
+                return;
+            }
+            existingItem.quantity = qty + 1;
+        } else {
+            let newProduct = { ...product, quantity: 1 };
+            cart.push(newProduct);
         }
-        cart.push(product);
         localStorage.setItem("cart", JSON.stringify(cart));
         window.location.href = "cart.html";
     }

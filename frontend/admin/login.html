@@ -107,18 +107,41 @@
         <a href="../index.html" class="back-link">&larr; Back to Store</a>
     </div>
 
-    <script>
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        
+        // Import config from your existing file (or paste here if preferred, but since it's an inline script, we just declare it)
+        const firebaseConfig = {
+          apiKey: "AIzaSyD1UHj3tRfjpknCW5LyxzVpBMuORjQw8Yo",
+          authDomain: "anas-watches.firebaseapp.com",
+          projectId: "anas-watches",
+          storageBucket: "anas-watches.firebasestorage.app",
+          messagingSenderId: "969091370398",
+          appId: "1:969091370398:web:9963897ef56c5f76eb1a8f",
+          measurementId: "G-7L6G6JWPVH"
+        };
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const email = document.getElementById('email').value;
             const pass = document.getElementById('password').value;
+            const btn = document.querySelector('.btn-login');
             
-            // Check credentials as defined in PRD
-            if (email === 'anas11@gmail.com' && pass === 'anasanas') {
+            btn.textContent = "Verifying...";
+            btn.disabled = true;
+            
+            try {
+                await signInWithEmailAndPassword(auth, email, pass);
+                // Auth successful
                 localStorage.setItem('adminLoggedIn', 'true');
                 window.location.href = 'dashboard.html';
-            } else {
+            } catch (error) {
                 alert('Access Denied: Invalid Credentials!');
+                btn.textContent = "Login Securely";
+                btn.disabled = false;
             }
         });
     </script>
